@@ -7,7 +7,9 @@ node sourceToAstJson.js path_to_file
 ```
 ## Получить обновленный файлик в папочку transpiled
 ```bash
-npm start 'glob-mask-to-files' 'name-migration'
+npm start 'glob-mask-to-files' 'name-migration' ['exclude-regexp']
+// or
+node index 'glob-mask-to-files' 'name-migration' ['exclude-regexp']
 ```
 
 `name-migration` это файлик в папочке `migrations`, принцип простой можно придумать свои любые видоизменялки. 
