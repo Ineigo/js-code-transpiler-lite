@@ -8,7 +8,10 @@ const filePath = path.join(__dirname, process.argv[2]);
 const name = process.argv[2].split('/').pop();
 const content = fs.readFileSync(filePath, 'utf8');
 
-const ast = parser.parse(content, { sourceType: 'module' });
+const ast = parser.parse(content, { 
+    plugins: ['classProperties', 'objectRestSpread', 'exportDefaultFrom', 'exportNamespaceFrom'],
+    sourceType: 'module' 
+});
 
 const outputFolderName = 'astJSON';
 if (!fs.existsSync(outputFolderName)) fs.mkdirSync(outputFolderName);

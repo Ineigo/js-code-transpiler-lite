@@ -15,10 +15,11 @@ export default function modifier(filePath, migration) {
     if (!output) return;
 
     // Save changes
-    // const outputFolderName = 'transpiled';
-    // if (!fs.existsSync(outputFolderName)) {
-    //     fs.mkdirSync(outputFolderName);
-    // }
-    // const outputFileName  = path.join(__dirname, `../${outputFolderName}/${name}`);
-    fs.writeFileSync(fullFilePath, output.code);
+    const outputFolderName = 'transpiled';
+    if (!fs.existsSync(outputFolderName)) {
+        fs.mkdirSync(outputFolderName);
+    }
+    const outputFileName  = path.join(__dirname, `../${outputFolderName}/${name}`);
+    fs.writeFileSync(outputFileName, output.code);
+    // fs.writeFileSync(fullFilePath, output.code);
 }
