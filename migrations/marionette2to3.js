@@ -31,28 +31,35 @@ export default function marionette2to3(ast, collback = () => {}) {
             }
         },
         ClassProperty(path) {
-            if (path.node.key.name === 'behaviors' && isObjectExpression(path.node.value)) {
-                isEdited = true;
-                collback(path.node.value.type, 'ArrayExpression');
-                const elements = [];
-                for (const prop of path.node.value.properties) {
-                    if (prop.value.properties.length) {
-                        elements.push(
-                            objectExpression([
-                                objectProperty(identifier('behaviorClass'), prop.key),
-                                ...prop.value.properties,
-                            ])
-                        );
-                    } else {
-                        elements.push(prop.key);
-                    }
-                }
-                path.node.value = arrayExpression(elements);
-            }
+            processBehaviors(path, collback, () => (isEdited = true));
         },
+        ObjectProperty(path) {
+            processBehaviors(path, collback, () => (isEdited = true));
+        }
     });
 
     return isEdited ? ast : null;
+}
+
+function processBehaviors(path, collback, cb) {
+    if (path.node.key.name === 'behaviors' && isObjectExpression(path.node.value)) {
+        cb && cb();
+        collback(path.node.value.type, 'ArrayExpression');
+        const elements = [];
+        for (const prop of path.node.value.properties) {
+            if (prop.value.properties.length) {
+                elements.push(
+                    objectExpression([
+                        objectProperty(identifier('behaviorClass'), prop.key),
+                        ...prop.value.properties,
+                    ])
+                );
+            } else {
+                elements.push(prop.key);
+            }
+        }
+        path.node.value = arrayExpression(elements);
+    }
 }
 
 // reqres
