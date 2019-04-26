@@ -5,11 +5,19 @@ import prettier from 'prettier';
 import chalk from 'chalk';
 
 export default function transpilation(code, sourcePath = '', migration) {
-    let ast = parser.parse(code, {
-        sourceType: 'module',
-        plugins: ['classProperties', 'objectRestSpread', 'exportDefaultFrom', 'exportNamespaceFrom'],
-        loose: ['es6.modules'],
-    });
+    let ast;
+    try {
+        ast = parser.parse(code, {
+            sourceType: 'module',
+            plugins: ['classProperties', 'objectRestSpread', 'exportDefaultFrom', 'exportNamespaceFrom'],
+            loose: ['es6.modules'],
+        });
+    } catch(e) {
+        console.log(chalk.bold.red(`[Error]: Invalid code by ${sourcePath}`));
+        console.log(chalk.bold.red(`\t${e.message}`));
+        return null;
+    }
+
     if (migration instanceof Function) {
         ast = migration(ast, (from, to) => logRename(from, to, sourcePath));
     } else {
@@ -25,7 +33,7 @@ export default function transpilation(code, sourcePath = '', migration) {
         trailingComma: 'es5',
         tabWidth: 4,
         singleQuote: true,
-        parser: 'babylon',
+        parser: 'babel',
     });
     return output;
 }

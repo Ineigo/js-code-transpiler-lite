@@ -1,4 +1,4 @@
-require('babel-register');
+require('@babel/register');
 const glob = require("glob");
 const chalk = require('chalk');
 const modifier = require('./src/modifier').default;
